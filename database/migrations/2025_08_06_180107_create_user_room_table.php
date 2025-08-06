@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reviews', function (Blueprint $table) {
+        Schema::create('user_room', function (Blueprint $table) {
             $table->id();
-            $table->integer('rating')->nullable(false);
-            $table->text('comment')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('book_id')->constrained()->onDelete('cascade');
+            $table->foreignId('room_id')->constrained()->onDelete('cascade');
+            $table->timestamp('joined_at')->useCurrent();
+            $table->boolean('is_admin')->default(false);
             $table->timestamps();
+            
+            $table->unique(['user_id', 'room_id']);
         });
     }
 
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reviews');
+        Schema::dropIfExists('user_room');
     }
 };

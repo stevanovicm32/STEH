@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('books', function (Blueprint $table) {
+        Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable(false);
-            $table->string('author')->nullable(false);
+            $table->string('name')->nullable(false);
             $table->text('description')->nullable();
-            $table->string('isbn', 13)->unique()->nullable();
-            $table->integer('published_year')->nullable();
-            $table->decimal('price', 8, 2)->default(0.00);
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->boolean('is_private')->default(false);
+            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('books');
+        Schema::dropIfExists('rooms');
     }
 };
