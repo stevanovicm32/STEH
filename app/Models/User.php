@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -44,5 +45,47 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the rooms that the user has joined.
+     */
+    public function rooms()
+    {
+        return $this->belongsToMany(Room::class, 'user_room')
+                    ->withPivot('joined_at', 'is_admin')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Get the rooms that the user has created.
+     */
+    public function createdRooms()
+    {
+        return $this->hasMany(Room::class, 'created_by');
+    }
+
+    /**
+     * Get the messages sent by the user.
+     */
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    /**
+     * Check if user is admin.
+     */
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if user is moderator.
+     */
+    public function isModerator()
+    {
+        return $this->role === 'moderator' || $this->role === 'admin';
     }
 }
